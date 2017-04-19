@@ -1,0 +1,94 @@
+CREATE TABLE hotel
+(
+  id serial NOT NULL,
+  name text NOT NULL,
+  address text,
+  city text NOT NULL,
+  country text NOT NULL,
+  pincode text,
+  state text NOT NULL,
+  currency text NOT NULL,
+  contact_no text NOT NULL,
+  lat double precision,
+  "long" double precision,
+  locality text,
+  date_created date,
+  hotel_id text NOT NULL DEFAULT nextval('hotel_hotel_id_seq'::regclass),
+  email text NOT NULL,
+  cm_id text,
+  rm_id text,
+  g_id text,
+  crs_id text,
+  CONSTRAINT hotel_hotel_id_pk PRIMARY KEY (hotel_id),
+  CONSTRAINT hotel_hotel_id_uindex UNIQUE(hotel_id)
+)
+WITH (
+  OIDS=FALSE
+);
+CREATE TABLE users
+(
+  userid serial NOT NULL,
+  username text NOT NULL,
+  password character varying(80) NOT NULL,
+  first_name character varying(60) NOT NULL,
+  last_name character varying(80) NOT NULL,
+  CONSTRAINT users_pkey PRIMARY KEY (userid),
+  CONSTRAINT uname_key UNIQUE (username)
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE TABLE country
+(
+  country_id serial NOT NULL,
+  country_name text NOT NULL,
+  country_code text NOT NULL,
+  CONSTRAINT country_pkey PRIMARY KEY (country_id),
+  CONSTRAINT country_country_name_uindex UNIQUE(country_name)
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE TABLE state
+(
+  state_id serial NOT NULL,
+  state_name text NOT NULL,
+  country_id integer,
+  CONSTRAINT state_pkey PRIMARY KEY (state_id),
+  CONSTRAINT state_country_country_id_fk FOREIGN KEY (country_id)
+      REFERENCES country (country_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+
+
+CREATE TABLE city
+(
+  city_id serial NOT NULL,
+  city_name text NOT NULL,
+  state_id integer,
+  CONSTRAINT city_pkey PRIMARY KEY (city_id),
+  CONSTRAINT city_state_state_id_fk FOREIGN KEY (state_id)
+      REFERENCES state (state_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+
+
+CREATE TABLE currency
+(
+  currency_code text NOT NULL,
+  currency_name text NOT NULL,
+  CONSTRAINT currency_pkey PRIMARY KEY (currency_code),
+  CONSTRAINT currency_currency_code_uindex UNIQUE(currency_code),
+  CONSTRAINT currency_currency_name_uindex UNIQUE(currency_name)
+)
+WITH (
+  OIDS=FALSE
+);
